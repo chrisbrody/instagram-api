@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Instagram api</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<style>
+		body {
+			background-color:#46769C;
+		}
+
+		.brand {
+			vertical-align:middle;
+			height:50px;
+			margin-top:30px;
+			color:white;
+		}
+
+		.logo {
+			width:50px;
+			height:100%;
+		}
+
+		.title {
+			display:inline;
+			position:relative;
+			top:15px;
+			font-size:46px;
+		}
+
+		.row {
+
+			margin-top:50px;
+		}
+
+		.con {
+			margin-bottom:50px;
+			border:1px solid #EEE;
+			text-align:center;
+			padding:20px 0;
+			background-color:#EEE;
+			border-radius:5px;
+		}
+
+		@-webkit-keyframes flipInY {
+		  from {
+		    -webkit-transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+		    transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+		    -webkit-animation-timing-function: ease-in;
+		    animation-timing-function: ease-in;
+		    opacity: 0;
+		  }
+
+		  40% {
+		    -webkit-transform: perspective(400px) rotate3d(0, 1, 0, -20deg);
+		    transform: perspective(400px) rotate3d(0, 1, 0, -20deg);
+		    -webkit-animation-timing-function: ease-in;
+		    animation-timing-function: ease-in;
+		  }
+
+		  60% {
+		    -webkit-transform: perspective(400px) rotate3d(0, 1, 0, 10deg);
+		    transform: perspective(400px) rotate3d(0, 1, 0, 10deg);
+		    opacity: 1;
+		  }
+
+		  80% {
+		    -webkit-transform: perspective(400px) rotate3d(0, 1, 0, -5deg);
+		    transform: perspective(400px) rotate3d(0, 1, 0, -5deg);
+		  }
+
+		  to {
+		    -webkit-transform: perspective(400px);
+		    transform: perspective(400px);
+		  }
+		}
+
+		@keyframes flipInY {
+		  from {
+		    -webkit-transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+		    transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+		    -webkit-animation-timing-function: ease-in;
+		    animation-timing-function: ease-in;
+		    opacity: 0;
+		  }
+
+		  40% {
+		    -webkit-transform: perspective(400px) rotate3d(0, 1, 0, -20deg);
+		    transform: perspective(400px) rotate3d(0, 1, 0, -20deg);
+		    -webkit-animation-timing-function: ease-in;
+		    animation-timing-function: ease-in;
+		  }
+
+		  60% {
+		    -webkit-transform: perspective(400px) rotate3d(0, 1, 0, 10deg);
+		    transform: perspective(400px) rotate3d(0, 1, 0, 10deg);
+		    opacity: 1;
+		  }
+
+		  80% {
+		    -webkit-transform: perspective(400px) rotate3d(0, 1, 0, -5deg);
+		    transform: perspective(400px) rotate3d(0, 1, 0, -5deg);
+		  }
+
+		  to {
+		    -webkit-transform: perspective(400px);
+		    transform: perspective(400px);
+		  }
+		}
+
+		.flipInY {
+		  -webkit-backface-visibility: visible !important;
+		  backface-visibility: visible !important;
+		  -webkit-animation-name: flipInY;
+		  animation-name: flipInY;
+		}
+		.animated {
+		  -webkit-animation-duration: 1s;
+		  animation-duration: 1s;
+		  -webkit-animation-fill-mode: both;
+		  animation-fill-mode: both;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="brand">
+			<img class="logo" src="http://codifyacademy.com/instagramapi/img/instalogo.png">
+			<h1 class="title">Instagram API</h1>
+		</div>
+		<div class="row">
+		  <div class="col-sm-2">
+		    <input id = "search" placeholder="Hashtag"/><br><br>
+			<button class="btn btn-default" id="button">SEARCH</button>
+		  </div>
+		  <div class="col-sm-10 facts">
+		    <div id="results"></div>
+		  </div>
+		</div>
+	</div>
+	
+
+
+
+
+
+	<script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
+
+	<script>
+		
+		function instaSearch(){
+			var search =  document.getElementById('search').value
+			document.getElementById('results').innerHTML = ""
+
+			$.ajax({
+			    url: "https://api.instagram.com/v1/tags/" + search + "/media/recent?access_token=1193616676.1677ed0.c2a52736eb714db3bef6b8671b485be2",
+			    jsonp: "callback",
+
+			    dataType: "jsonp",
+
+			    type: 'GET',
+
+			    success: function(data) {
+			    	for(i = 0; i < data.data.length; i++) {
+			    		var newA = document.createElement('a')
+			    		newA.setAttribute('href', data.data[i].link)
+			    		newA.setAttribute('target', "_blank")
+
+			    		var newDiv = document.createElement('div')
+			    		newDiv.className = "col-sm-3 col-sm-offset-1 con animated flipInY"
+
+			    		var newImg = document.createElement('img')
+			    		newImg.setAttribute('src', data.data[i].images.thumbnail.url)
+			    		newDiv.appendChild(newImg)
+
+			    		var newLike = document.createElement('h5')
+			    		var likes = document.createTextNode('Likes: ' + data.data[i].likes.count)
+			    		newLike.appendChild(likes)
+			    		newDiv.appendChild(newLike)
+
+			    		var creator = document.createElement('h5')
+			    		var createdBy = document.createTextNode('From: ' + data.data[i].caption.from.username)
+			    		creator.appendChild(createdBy)
+			    		newDiv.appendChild(creator)
+			    		newA.appendChild(newDiv)
+
+			    		document.getElementById('results').appendChild(newA)
+			    	}
+			    }
+			});
+		}
+
+		document.getElementById('button').addEventListener('click', instaSearch, false)
+
+	</script>
+</body>
+</html>
